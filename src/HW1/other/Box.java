@@ -37,7 +37,7 @@ public class Box<T extends Fruit> implements Comparable<Box<T>> {
         return box;
     }
 
-    public boolean compare(Box obj) {
+    public boolean compare(Box<?> anotherBox) {
         return compareTo(obj) == 0;
     }
 
