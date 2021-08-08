@@ -19,7 +19,7 @@ public class Box<T extends Fruit> implements Comparable<Box<T>> {
     }
 
     public void removeFruits() {
-        this.fruitsInBox = new ArrayList<>();
+        this.fruitsInBox.clear();
     }
 
     public Float getWeightBox() {
