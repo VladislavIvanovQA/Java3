@@ -42,7 +42,7 @@ public class Box<T extends Fruit> implements Comparable<Box<T>> {
     }
 
     @Override
-    public int compareTo(Box o) {
+    public int compareTo(Box<?> o) {
         return o.getWeightBox().compareTo(this.getWeightBox());
     }
 }
