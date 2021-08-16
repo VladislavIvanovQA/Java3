@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="150.0" prefWidth="317.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.gb.java2.chat.client.controllers.NickController">
+    <Label layoutX="21.0" layoutY="25.0" prefHeight="17.0" prefWidth="167.0" text="Введите ник"
+           AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="129.0"
+           AnchorPane.topAnchor="25.0"/>
+    <TextField fx:id="nickFiled" layoutX="87.0" layoutY="21.0" AnchorPane.leftAnchor="87.0"/>
+    <Button fx:id="changeNick" layoutX="88.0" layoutY="150.0" mnemonicParsing="false" onAction="#executeNick"
+            prefHeight="25.0" prefWidth="149.0" text="Войти!"/>
+</AnchorPane>
