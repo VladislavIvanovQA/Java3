@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import ru.gb.java2.chat.client.controllers.AuthController;
 import ru.gb.java2.chat.client.controllers.ChatController;
 import ru.gb.java2.chat.client.controllers.NickController;
+import ru.gb.java2.chat.client.model.Network;
 
 import java.io.IOException;
 
@@ -31,7 +32,7 @@ public class ClientChat extends Application {
 
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         INSTANCE = this;
     }
 
@@ -41,7 +42,6 @@ public class ClientChat extends Application {
         initViews();
         getChatStage().show();
         getAuthStage().show();
-//        getNickStage().show();
         getAuthController().initMessageHandler();
     }
 
@@ -124,6 +124,12 @@ public class ClientChat extends Application {
         return Screen.getPrimary();
     }
 
+    @Override
+    public void stop() throws Exception {
+        Network.getInstance().saveMessages(getChatController().getChatHistory());
+        super.stop();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -134,6 +140,7 @@ public class ClientChat extends Application {
 
     public void switchToMainChatWindow(String username) {
         getNickController().close();
+        Network.username = username;
         getPrimaryStage().setTitle(username);
         getChatController().initMessageHandler();
         getAuthController().close();
