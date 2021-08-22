@@ -37,12 +37,12 @@ public class Box<T extends Fruit> implements Comparable<Box<T>> {
         return box;
     }
 
-    public boolean compare(Box<?> anotherBox) {
-        return compareTo(obj) == 0;
+    public boolean compare(Box anotherBox) {
+        return compareTo(anotherBox) == 0;
     }
 
     @Override
-    public int compareTo(Box<?> o) {
+    public int compareTo(Box o) {
         return o.getWeightBox().compareTo(this.getWeightBox());
     }
 }
