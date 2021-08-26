@@ -15,6 +15,8 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler implements Serializable {
 
@@ -33,7 +35,7 @@ public class ClientHandler implements Serializable {
         inputStream = new ObjectInputStream(clientSocket.getInputStream());
         outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
-        new Thread(() -> {
+        Executors.newSingleThreadExecutor().execute(() -> {
             try {
                 authentication();
                 readMessages();
@@ -47,7 +49,7 @@ public class ClientHandler implements Serializable {
                     System.err.println("Failed to close connection");
                 }
             }
-        }).start();
+        });
     }
 
     private void authentication() throws IOException {
