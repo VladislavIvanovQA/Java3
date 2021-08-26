@@ -64,6 +64,7 @@ public class AuthController {
                 AuthOkCommandData data = (AuthOkCommandData) command.getData();
                 String username = data.getUsername();
                 Platform.runLater(() -> ClientChat.INSTANCE.switchToMainChatWindow(username));
+                ClientChat.INSTANCE.getChatController().setChatHistory(getNetwork().readMessage(username));
             } else if (command.getType() == CommandType.AUTH_TIME_OUT) {
                 Platform.runLater(Dialogs.AuthError.TIME_OUT::show);
             } else {

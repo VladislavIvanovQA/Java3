@@ -21,6 +21,7 @@ import ru.gb.java2.chat.clientserver.commands.UpdateUsersListCommandData;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,15 @@ public class ChatController {
     public void changeNick(ActionEvent actionEvent) {
         ClientChat.INSTANCE.getNickController().initMessageHandler();
         ClientChat.INSTANCE.getNickStage().show();
+    }
+
+    public String getChatHistory() {
+        return chatHistory.getText();
+    }
+
+    public void setChatHistory(String message) {
+        System.out.println("SET MESSAGE: " + message);
+        chatHistory.setText(message);
     }
 
     @FXML

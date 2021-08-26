@@ -23,7 +23,9 @@ public class Network {
     private List<ReadCommandListener> listeners = new CopyOnWriteArrayList<>();
     private Thread readMessageProcess;
     private boolean connected;
-
+    public static String username;
+    private String filename = "history_";
+    private String filetype = ".txt";
 
     public static Network getInstance() {
         if (INSTANCE == null) {
@@ -32,7 +34,6 @@ public class Network {
 
         return INSTANCE;
     }
-
 
     private Network(String host, int port) {
         this.host = host;
@@ -99,7 +100,6 @@ public class Network {
         return command;
     }
 
-
     public void sendPrivateMessage(String recipient, String message) throws IOException {
         sendCommand(Command.privateMessageCommand(recipient, message));
     }
@@ -133,6 +133,32 @@ public class Network {
 
     public void removeReadMessageListener(ReadCommandListener listener) {
         listeners.remove(listener);
+    }
+
+    public String readMessage(String username) {
+        System.out.println("USERNAME: " + username);
+        File file = new File(filename + username + filetype);
+        System.out.println("FILE: " + file);
+        System.out.println();
+        StringBuilder builder = new StringBuilder();
+        try (InputStreamReader in = new InputStreamReader(new FileInputStream(file))) {
+            int x;
+            while ((x = in.read()) > -1) {
+                builder.append((char) x);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
+    }
+
+    public void saveMessages(String message) {
+        File file = new File(filename + username + filetype);
+        try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file))) {
+            out.write(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void close() {

@@ -129,6 +129,7 @@ public class ClientHandler implements Serializable {
                 case PUBLIC_MESSAGE: {
                     PublicMessageCommandData data = (PublicMessageCommandData) command.getData();
                     processMessage(data.getMessage());
+                    break;
                 }
                 case CHANGE_NICK: {
                     ChangeNickCommandData data = (ChangeNickCommandData) command.getData();
