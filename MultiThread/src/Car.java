@@ -1,11 +1,14 @@
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
+import java.util.stream.IntStream;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
     private final CyclicBarrier waitReady;
-    private final Lock finish;
+    private final CyclicBarrier finish;
+    private final Semaphore tunnel;
 
     static {
         CARS_COUNT = 0;
@@ -15,10 +18,11 @@ public class Car implements Runnable {
     private final int speed;
     private final String name;
 
-    public Car(Race race, int speed, CyclicBarrier waitReady, Lock finish) {
+    public Car(Race race, int speed, CyclicBarrier waitReady, CyclicBarrier finish, Semaphore tunnel) {
         this.race = race;
         this.waitReady = waitReady;
         this.finish = finish;
+        this.tunnel = tunnel;
         this.speed = speed;
         CARS_COUNT++;
         this.name = "Участник #" + CARS_COUNT;
@@ -42,13 +46,12 @@ public class Car implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        IntStream.range(0, race.getStages().size())
+                .forEach(i -> race.getStages().get(i).go(this, tunnel));
         try {
-            waitReady.await();
+            finish.await();
         } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
-        }
-        for (int i = 0; i < race.getStages().size(); i++) {
-            race.getStages().get(i).go(this);
         }
     }
 }

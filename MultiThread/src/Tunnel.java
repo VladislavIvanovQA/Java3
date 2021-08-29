@@ -1,4 +1,4 @@
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 
 public class Tunnel extends Stage {
     public Tunnel() {
@@ -7,16 +7,18 @@ public class Tunnel extends Stage {
     }
 
     @Override
-    public void go(Car c) {
+    public void go(Car c, Semaphore tunnel) {
         try {
             try {
                 System.out.println(c.getName() + " готовится к этапу(ждет): " + description);
+                tunnel.acquire();
                 System.out.println(c.getName() + " начал этап: " + description);
                 Thread.sleep(length / c.getSpeed() * 1000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {
                 System.out.println(c.getName() + " закончил этап: " + description);
+                tunnel.release();
             }
         } catch (Exception e) {
             e.printStackTrace();
