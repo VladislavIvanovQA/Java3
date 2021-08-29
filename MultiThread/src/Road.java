@@ -1,3 +1,5 @@
+import java.util.concurrent.CyclicBarrier;
+
 public class Road extends Stage {
     public Road(int length) {
         this.length = length;

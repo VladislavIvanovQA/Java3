@@ -1,3 +1,5 @@
+import java.util.concurrent.CyclicBarrier;
+
 public class Tunnel extends Stage {
     public Tunnel() {
         this.length = 80;
@@ -10,7 +12,7 @@ public class Tunnel extends Stage {
             try {
                 System.out.println(c.getName() + " готовится к этапу(ждет): " + description);
                 System.out.println(c.getName() + " начал этап: " + description);
-                Thread.sleep(length / c.getSpeed() * 1000);
+                Thread.sleep(length / c.getSpeed() * 1000L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {

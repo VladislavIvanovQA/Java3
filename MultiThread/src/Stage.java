@@ -1,3 +1,5 @@
+import java.util.concurrent.CyclicBarrier;
+
 public abstract class Stage {
     protected int length;
     protected String description;
