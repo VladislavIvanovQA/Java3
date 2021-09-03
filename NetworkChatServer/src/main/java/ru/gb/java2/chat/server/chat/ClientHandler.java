@@ -1,5 +1,7 @@
 package ru.gb.java2.chat.server.chat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.gb.java2.chat.clientserver.Command;
 import ru.gb.java2.chat.clientserver.CommandType;
 import ru.gb.java2.chat.clientserver.commands.AuthCommandData;
@@ -15,11 +17,11 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ClientHandler implements Serializable {
 
+    private Logger log = LoggerFactory.getLogger(ClientHandler.class);
     private final MyServer server;
     private final Socket clientSocket;
     private ObjectInputStream inputStream;
@@ -40,13 +42,12 @@ public class ClientHandler implements Serializable {
                 authentication();
                 readMessages();
             } catch (IOException e) {
-                e.printStackTrace();
-                System.err.println("Failed to process message from client");
+                log.error("Failed to process message from client", e);
             } finally {
                 try {
                     closeConnection();
                 } catch (IOException e) {
-                    System.err.println("Failed to close connection");
+                    log.error("Failed to close connection", e);
                 }
             }
         });
@@ -54,12 +55,12 @@ public class ClientHandler implements Serializable {
 
     private void authentication() throws IOException {
         Timer timer = new Timer();
-        System.out.println("Start timer");
+        log.info("Start timer");
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    System.out.println("Try close connection");
+                    log.info("Try close connection");
                     sendCommand(Command.authTimeOutCommand("Вышло время ожидания авторизации"));
                     closeConnection();
                 } catch (IOException e) {
@@ -98,10 +99,9 @@ public class ClientHandler implements Serializable {
         Command command = null;
         try {
             command = (Command) inputStream.readObject();
-            System.out.println("Server: " + command);
+            log.info("Server: {}", command);
         } catch (ClassNotFoundException e) {
-            System.err.println("Failed to read Command class");
-            e.printStackTrace();
+            log.error("Failed to read Command class", e);
         }
         return command;
     }
@@ -159,7 +159,7 @@ public class ClientHandler implements Serializable {
     }
 
     public void sendCommand(Command command) throws IOException {
-        System.out.println("Server: " + command);
+        log.info("Server: {}", command);
         outputStream.writeObject(command);
     }
 

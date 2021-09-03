@@ -1,5 +1,7 @@
 package ru.gb.java2.chat.server.chat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.gb.java2.chat.clientserver.Command;
 import ru.gb.java2.chat.server.chat.db.DbService;
 
@@ -11,23 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyServer {
-
+    private Logger log = LoggerFactory.getLogger(MyServer.class);
     private final List<ClientHandler> clients = new ArrayList<>();
     private DbService dbService;
 
     public void start(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server has been started");
+            log.info("Server has been started");
             dbService = new DbService();
             while (true) {
                 waitAndProcessNewClientConnection(serverSocket);
             }
         } catch (IOException e) {
-            System.err.println("Failed to bind port " + port);
-            e.printStackTrace();
+            log.error("Failed to bind port " + port, e);
         } catch (SQLException e) {
-            System.err.println("Failed to connect DB");
-            e.printStackTrace();
+            log.error("Failed to connect DB", e);
         }
         finally {
             if (dbService != null) {
@@ -37,9 +37,9 @@ public class MyServer {
     }
 
     private void waitAndProcessNewClientConnection(ServerSocket serverSocket) throws IOException {
-        System.out.println("Waiting for new client connection...");
+        log.info("Waiting for new client connection...");
         Socket clientSocket = serverSocket.accept();
-        System.out.println("Client has been connected");
+        log.info("Client has been connected");
         ClientHandler clientHandler = new ClientHandler(this, clientSocket);
         clientHandler.handle();
     }

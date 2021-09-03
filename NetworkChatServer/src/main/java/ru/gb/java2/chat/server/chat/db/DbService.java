@@ -1,5 +1,7 @@
 package ru.gb.java2.chat.server.chat.db;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.gb.java2.chat.server.chat.auth.User;
 
 import java.sql.Connection;
@@ -8,13 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DbService {
+    private Logger log = LoggerFactory.getLogger(DbService.class);
     private static final String DB_URL = "jdbc:sqlite:NetworkChatServer/chat.db";
     private Connection connection;
 
     public DbService() throws SQLException {
-        System.out.println("Try to connection DB: " + DB_URL);
+        log.info("Try to connection DB: {}", DB_URL);
         connection = DriverManager.getConnection(DB_URL);
-        System.out.println("Connection DB successes!");
+        log.info("Connection DB successes!");
     }
 
     public String getUsernameByLoginAndPassword(String login, String password) {
@@ -22,9 +25,8 @@ public class DbService {
         try {
             return findUserByLoginAndPassword(requiredUser).getUsername();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Sql exception!", e);
         }
-
         return null;
     }
 
@@ -44,7 +46,7 @@ public class DbService {
     private int updateUserNick(String oldNick, String newNick) throws SQLException {
         int result = connection.createStatement()
                 .executeUpdate("UPDATE user SET username='" + newNick + "' WHERE username = '" + oldNick + "'");
-        System.out.println("Result update: " + result);
+        log.info("Result update: {}", result);
         return result;
     }
 
@@ -54,7 +56,7 @@ public class DbService {
                 connection.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Failed to close connection", e);
         }
     }
 }
